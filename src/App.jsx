@@ -2,8 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import './App.css';
-
 import locales from './locales.json';
+import MenuScreen from './screens/MenuScreen';
+import LettersGame from './screens/LettersGame';
+import NumbersGame from './screens/NumbersGame';
+import MemoryGame from './screens/MemoryGame';
 
 const MINIGAMES = [
   { key: 'letters', nameKey: 'minigame1' },
@@ -12,7 +15,7 @@ const MINIGAMES = [
 ];
 
 function App() {
-  const [screen, setScreen] = useState('start');
+  const [screen, setScreen] = useState('menu');
   const [selectedMinigame, setSelectedMinigame] = useState(null);
   const [lang, setLang] = useState('en');
   const [strings, setStrings] = useState(locales[lang]);
@@ -23,11 +26,11 @@ function App() {
 
   const handleSelectMinigame = (key) => {
     setSelectedMinigame(key);
-    setScreen('minigame');
+    setScreen(key);
   };
 
-  const handleBackToStart = () => {
-    setScreen('start');
+  const handleBackToMenu = () => {
+    setScreen('menu');
     setSelectedMinigame(null);
   };
 
@@ -50,36 +53,17 @@ function App() {
           <option value="es">Español</option>
         </select>
       </div>
-      {screen === 'start' && (
-        <div className="start-screen">
-          <h1 className="title">{strings.title}</h1>
-          <div className="minigame-list">
-            {MINIGAMES.map((game) => (
-              <button
-                key={game.key}
-                className="minigame-btn"
-                onClick={() => handleSelectMinigame(game.key)}
-              >
-                {strings[game.nameKey]}
-              </button>
-            ))}
-          </div>
-        </div>
+      {screen === 'menu' && (
+        <MenuScreen MINIGAMES={MINIGAMES} strings={strings} onSelectMinigame={handleSelectMinigame} />
       )}
-      {screen === 'minigame' && (
-        <div className="minigame-screen">
-          <h2>{
-            selectedMinigame === 'letters' ? strings.minigame1 :
-            selectedMinigame === 'numbers' ? strings.minigame2 :
-            strings.minigame3
-          }</h2>
-          <div className="minigame-placeholder">
-            <p>This is a placeholder for the minigame logic.</p>
-          </div>
-          <button className="back-btn" onClick={handleBackToStart}>
-            {strings.back}
-          </button>
-        </div>
+      {screen === 'letters' && (
+        <LettersGame strings={strings} onBack={handleBackToMenu} />
+      )}
+      {screen === 'numbers' && (
+        <NumbersGame strings={strings} onBack={handleBackToMenu} />
+      )}
+      {screen === 'memory' && (
+        <MemoryGame strings={strings} onBack={handleBackToMenu} />
       )}
     </div>
   );
