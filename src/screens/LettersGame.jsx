@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// Placeholder for confetti and sounds
-// import Confetti from 'react-confetti';
+import Confetti from 'react-confetti';
 import correctSound from '../assets/correct.mp3';
 import failSound from '../assets/fail.mp3';
 import enjoyMusic from '../assets/clap.mp3';
@@ -36,16 +35,18 @@ function shuffle(arr) {
     .map(({ value }) => value);
 }
 
+const NUM_PLAYS = 3; // Change to desired number for debugging or gameplay
+
 const LettersGame = ({ onBackToMenu }) => {
   const [challenge, setChallenge] = useState(getRandomChallenge());
   const [selected, setSelected] = useState({});
   const [winCount, setWinCount] = useState(0);
-  const [showConfetti, setShowConfetti] = useState(false);
   const [disableAll, setDisableAll] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+  // Prevent further challenges on game over
 
   useEffect(() => {
-    if (winCount === 3) {
+    if (winCount === NUM_PLAYS) {
       setGameOver(true);
       // play enjoy music
       const audio = new Audio(enjoyMusic);
@@ -57,19 +58,20 @@ const LettersGame = ({ onBackToMenu }) => {
   }, [winCount, onBackToMenu]);
 
   const handleSelect = (char) => {
-    if (disableAll || selected[char]) return;
+    if (disableAll || selected[char] || gameOver) return;
     if (char === challenge.letter) {
-      setShowConfetti(true);
       setDisableAll(true);
       setWinCount(w => w + 1);
       // play correct sound
       const audio = new Audio(correctSound);
       audio.play();
       setTimeout(() => {
-        setShowConfetti(false);
         setDisableAll(false);
         setSelected({});
-        setChallenge(getRandomChallenge());
+        // Only show new challenge if not game over
+        if (winCount + 1 < NUM_PLAYS) {
+          setChallenge(getRandomChallenge());
+        }
       }, 2000);
     } else {
       setSelected(s => ({ ...s, [char]: "fail" }));
@@ -81,48 +83,56 @@ const LettersGame = ({ onBackToMenu }) => {
 
   return (
     <div className="letters-game" style={{ position: "relative", padding: 32 }}>
-      {/* Win counter */}
-      <div style={{ position: "absolute", top: 16, left: 16, fontSize: 24 }}>
-        Wins: {winCount}
-      </div>
-      {/* Emoji challenge */}
-      <div style={{ fontSize: 96, textAlign: "center", margin: "48px 0" }}>
-        {challenge.emoji}
-      </div>
-      {/* Options */}
-      <div style={{ display: "flex", justifyContent: "center", gap: 32 }}>
-        {challenge.options.map(char => (
-          <button
-            key={char}
-            onClick={() => handleSelect(char)}
-            disabled={disableAll || selected[char] === "fail"}
-            style={{
-              fontSize: 48,
-              padding: "24px 40px",
-              borderRadius: 16,
-              background: selected[char] === "fail" ? "#f44336" : "#e0e0e0",
-              color: selected[char] === "fail" ? "white" : "black",
-              cursor: disableAll || selected[char] === "fail" ? "not-allowed" : "pointer",
-              border: "none",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-              transition: "background 0.3s"
-            }}
-          >
-            {char}
-          </button>
-        ))}
-      </div>
-      {/* Confetti placeholder */}
-      {showConfetti && (
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, pointerEvents: "none" }}>
-          {/* <Confetti /> */}
-          <div style={{ fontSize: 48, color: "#FFD700", textAlign: "center", marginTop: 120 }}>🎉🎊</div>
-        </div>
+      {!gameOver && (
+        <>
+          {/* Win counter */}
+          <div style={{ position: "absolute", top: 16, left: 16, fontSize: 24 }}>
+            Wins: {winCount}
+          </div>
+          {/* Emoji challenge */}
+          <div style={{ fontSize: 96, textAlign: "center", margin: "48px 0" }}>
+            {challenge.emoji}
+          </div>
+          {/* Options */}
+          <div style={{ display: "flex", justifyContent: "center", gap: 32 }}>
+            {challenge.options.map(char => (
+              <button
+                key={char}
+                onClick={() => handleSelect(char)}
+                disabled={disableAll || selected[char] === "fail"}
+                style={{
+                  fontSize: 48,
+                  padding: "24px 40px",
+                  borderRadius: 16,
+                  background: selected[char] === "fail" ? "#f44336" : "#e0e0e0",
+                  color: selected[char] === "fail" ? "white" : "black",
+                  cursor: disableAll || selected[char] === "fail" ? "not-allowed" : "pointer",
+                  border: "none",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                  transition: "background 0.3s"
+                }}
+              >
+                {char}
+              </button>
+            ))}
+          </div>
+        </>
       )}
-      {/* Game over music and redirect */}
+      {/* Game over confetti and congratulations */}
       {gameOver && (
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.7)", color: "white", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontSize: 32 }}>
-          <div>Enjoy the music! 🎵</div>
+        <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", zIndex: 9999 }}>
+          <Confetti
+            width={window.innerWidth}
+            height={window.innerHeight}
+            numberOfPieces={400}
+            gravity={0.25}
+            colors={["#FFD700", "#FF69B4", "#4FC3F7", "#81C784", "#FFB300", "#AB47BC", "#F44336"]}
+            shapes={["rect", "star"]}
+            recycle={false}
+          />
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontSize: 40, color: "#333", background: "transparent", fontWeight: "bold" }}>
+            {typeof window.strings === 'object' && window.strings.congratulations ? window.strings.congratulations : '¡Felicidades!'}
+          </div>
         </div>
       )}
     </div>
