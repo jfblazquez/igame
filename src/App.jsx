@@ -25,11 +25,13 @@ function App() {
   }, [lang]);
 
   const handleSelectMinigame = (key) => {
+    console.log(`[DEBUG] handleSelectMinigame called with key: ${key}`);
     setSelectedMinigame(key);
     setScreen(key);
   };
 
   const handleBackToMenu = () => {
+    console.log('[DEBUG] handleBackToMenu called');
     setScreen('menu');
     setSelectedMinigame(null);
   };

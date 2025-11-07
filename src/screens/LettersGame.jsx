@@ -9,6 +9,7 @@ function getLocale() {
   // Try to get language from window or default to 'en'
   if (typeof window !== 'undefined' && window.navigator) {
     const lang = window.navigator.language || 'en';
+    console.log(`[DEBUG] Detected language: ${lang}`);
     if (lang.startsWith('es')) return 'es';
   }
   return 'en';
@@ -39,9 +40,9 @@ function shuffle(arr) {
     .map(({ value }) => value);
 }
 
-const NUM_PLAYS = 1; // Change to desired number for debugging or gameplay
+const NUM_PLAYS = 10; // Change to desired number for debugging or gameplay
 
-const LettersGame = ({ onBackToMenu, strings = {} }) => {
+const LettersGame = ({ strings, onBack}) => {
   const locale = getLocale();
   const emojiLetterMap = getEmojiLetterMap(locale);
   const [challenge, setChallenge] = useState(getRandomChallenge(emojiLetterMap));
@@ -53,15 +54,17 @@ const LettersGame = ({ onBackToMenu, strings = {} }) => {
 
   useEffect(() => {
     if (winCount === NUM_PLAYS) {
-      setGameOver(true);
-      // play enjoy music
-      const audio = new Audio(enjoyMusic);
-      audio.play();
+      // Wait before showing congratulations so user can see last word
       setTimeout(() => {
-        if (onBackToMenu) onBackToMenu();
-      }, 5000);
+        setGameOver(true);
+        const audio = new Audio(enjoyMusic);
+        audio.play();
+        setTimeout(() => {
+          if (onBack) onBack();
+        }, 1000);
+      }, 2000); // 2 seconds to see last word
     }
-  }, [winCount, onBackToMenu]);
+  }, [winCount]);
 
   const handleSelect = (char) => {
     if (disableAll || selected[char] || gameOver) return;
