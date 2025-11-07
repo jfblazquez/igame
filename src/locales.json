@@ -1,16 +1,20 @@
 {
   "en": {
     "title": "Select a Minigame",
-  "minigame1": "🔤 Letters Game",
-  "minigame2": "🔢 Numbers Game",
-  "minigame3": "🃏 Memory Game",
-    "back": "Back to Start"
+    "minigame1": "🔤 Letters Game",
+    "minigame2": "🔢 Numbers Game",
+    "minigame3": "🃏 Memory Game",
+    "back": "Back to Start",
+    "winsCounter": "Wins: {count}",
+    "congratulations": "Congratulations!"
   },
   "es": {
     "title": "Selecciona un minijuego",
-  "minigame1": "🔤 Juego de Letras",
-  "minigame2": "🔢 Juego de Números",
-  "minigame3": "🃏 Juego de Memoria",
-    "back": "Volver al inicio"
+    "minigame1": "🔤 Juego de Letras",
+    "minigame2": "🔢 Juego de Números",
+    "minigame3": "🃏 Juego de Memoria",
+    "back": "Volver al inicio",
+    "winsCounter": "Ganados: {count}",
+    "congratulations": "¡Felicidades!"
   }
 }

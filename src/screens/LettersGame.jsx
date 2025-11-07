@@ -4,28 +4,33 @@ import correctSound from '../assets/correct.mp3';
 import failSound from '../assets/fail.mp3';
 import enjoyMusic from '../assets/clap.mp3';
 
-// ...existing code...
-const emojiLetterMap = [
-  { emoji: "🍎", letter: "A" },
-  { emoji: "🐶", letter: "D" },
-  { emoji: "🚗", letter: "C" },
-  { emoji: "🦁", letter: "L" },
-  { emoji: "🌳", letter: "T" },
-  { emoji: "🍌", letter: "B" },
-  { emoji: "🐘", letter: "E" },
-  { emoji: "🐟", letter: "F" },
-  { emoji: "🍇", letter: "G" },
-  { emoji: "🏠", letter: "H" },
-];
+import emojiMap from '../assets/emojiMap.js';
 
-function getRandomChallenge() {
+function getLocale() {
+  // Try to get language from window or default to 'en'
+  if (typeof window !== 'undefined' && window.navigator) {
+    const lang = window.navigator.language || 'en';
+    if (lang.startsWith('es')) return 'es';
+  }
+  return 'en';
+}
+
+function getEmojiLetterMap(locale) {
+  return emojiMap[locale].map(e => ({
+    emoji: e.emoji,
+    name: e.name,
+    letter: e.name[0].toUpperCase()
+  }));
+}
+
+function getRandomChallenge(emojiLetterMap) {
   const idx = Math.floor(Math.random() * emojiLetterMap.length);
   const correct = emojiLetterMap[idx];
   // Pick 2 random incorrect letters
   let letters = emojiLetterMap.map(e => e.letter).filter(l => l !== correct.letter);
   letters = shuffle(letters).slice(0, 2);
   const options = shuffle([correct.letter, ...letters]);
-  return { emoji: correct.emoji, letter: correct.letter, options };
+  return { emoji: correct.emoji, letter: correct.letter, name: correct.name, options };
 }
 
 function shuffle(arr) {
@@ -37,13 +42,15 @@ function shuffle(arr) {
 
 const NUM_PLAYS = 3; // Change to desired number for debugging or gameplay
 
-const LettersGame = ({ onBackToMenu }) => {
-  const [challenge, setChallenge] = useState(getRandomChallenge());
+const LettersGame = ({ onBackToMenu, strings = {} }) => {
+  const locale = getLocale();
+  const emojiLetterMap = getEmojiLetterMap(locale);
+  const [challenge, setChallenge] = useState(getRandomChallenge(emojiLetterMap));
   const [selected, setSelected] = useState({});
   const [winCount, setWinCount] = useState(0);
   const [disableAll, setDisableAll] = useState(false);
   const [gameOver, setGameOver] = useState(false);
-  // Prevent further challenges on game over
+  const [showName, setShowName] = useState(false);
 
   useEffect(() => {
     if (winCount === NUM_PLAYS) {
@@ -62,15 +69,17 @@ const LettersGame = ({ onBackToMenu }) => {
     if (char === challenge.letter) {
       setDisableAll(true);
       setWinCount(w => w + 1);
+      setShowName(true);
       // play correct sound
       const audio = new Audio(correctSound);
       audio.play();
       setTimeout(() => {
         setDisableAll(false);
         setSelected({});
+        setShowName(false);
         // Only show new challenge if not game over
         if (winCount + 1 < NUM_PLAYS) {
-          setChallenge(getRandomChallenge());
+          setChallenge(getRandomChallenge(emojiLetterMap));
         }
       }, 2000);
     } else {
@@ -87,11 +96,16 @@ const LettersGame = ({ onBackToMenu }) => {
         <>
           {/* Win counter */}
           <div style={{ position: "absolute", top: 16, left: 16, fontSize: 24 }}>
-            Wins: {winCount}
+            {(typeof strings.winsCounter === 'string' ? strings.winsCounter.replace('{count}', winCount) : `Wins: ${winCount}`)}
           </div>
           {/* Emoji challenge */}
           <div style={{ fontSize: 96, textAlign: "center", margin: "48px 0" }}>
             {challenge.emoji}
+            {showName && (
+              <div style={{ fontSize: 32, marginTop: 16, color: "#333" }}>
+                {challenge.name}
+              </div>
+            )}
           </div>
           {/* Options */}
           <div style={{ display: "flex", justifyContent: "center", gap: 32 }}>
@@ -131,7 +145,7 @@ const LettersGame = ({ onBackToMenu }) => {
             recycle={false}
           />
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontSize: 40, color: "#333", background: "transparent", fontWeight: "bold" }}>
-            {typeof window.strings === 'object' && window.strings.congratulations ? window.strings.congratulations : '¡Felicidades!'}
+            {(typeof strings.congratulations === 'string' ? strings.congratulations : 'Congratulations!')}
           </div>
         </div>
       )}
