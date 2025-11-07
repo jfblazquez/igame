@@ -3,7 +3,6 @@ import Confetti from 'react-confetti';
 import correctSound from '../assets/correct.mp3';
 import failSound from '../assets/fail.mp3';
 import enjoyMusic from '../assets/clap.mp3';
-
 import emojiMap from '../assets/emojiMap.js';
 
 function getLocale() {
@@ -40,7 +39,7 @@ function shuffle(arr) {
     .map(({ value }) => value);
 }
 
-const NUM_PLAYS = 3; // Change to desired number for debugging or gameplay
+const NUM_PLAYS = 1; // Change to desired number for debugging or gameplay
 
 const LettersGame = ({ onBackToMenu, strings = {} }) => {
   const locale = getLocale();
@@ -95,7 +94,7 @@ const LettersGame = ({ onBackToMenu, strings = {} }) => {
       {!gameOver && (
         <>
           {/* Win counter */}
-          <div style={{ position: "absolute", top: 16, left: 16, fontSize: 24 }}>
+          <div style={{ width: '100%', textAlign: 'center', fontSize: 24, marginTop: 16, marginBottom: 8 }}>
             {(typeof strings.winsCounter === 'string' ? strings.winsCounter.replace('{count}', winCount) : `Wins: ${winCount}`)}
           </div>
           {/* Emoji challenge */}
@@ -108,7 +107,8 @@ const LettersGame = ({ onBackToMenu, strings = {} }) => {
             )}
           </div>
           {/* Options */}
-          <div style={{ display: "flex", justifyContent: "center", gap: 32 }}>
+              {!showName && (
+                <div style={{ display: "flex", justifyContent: "center", gap: 10 }}>
             {challenge.options.map(char => (
               <button
                 key={char}
@@ -130,6 +130,7 @@ const LettersGame = ({ onBackToMenu, strings = {} }) => {
               </button>
             ))}
           </div>
+              )}
         </>
       )}
       {/* Game over confetti and congratulations */}
