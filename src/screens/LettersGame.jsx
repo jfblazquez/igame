@@ -5,16 +5,6 @@ import failSound from '../assets/fail.mp3';
 import enjoyMusic from '../assets/clap.mp3';
 import emojiMap from '../assets/emojiMap.js';
 
-function getLocale() {
-  // Try to get language from window or default to 'en'
-  if (typeof window !== 'undefined' && window.navigator) {
-    const lang = window.navigator.language || 'en';
-    console.log(`[DEBUG] Detected language: ${lang}`);
-    if (lang.startsWith('es')) return 'es';
-  }
-  return 'en';
-}
-
 function getEmojiLetterMap(locale) {
   return emojiMap[locale].map(e => ({
     emoji: e.emoji,
@@ -26,10 +16,11 @@ function getEmojiLetterMap(locale) {
 function getRandomChallenge(emojiLetterMap) {
   const idx = Math.floor(Math.random() * emojiLetterMap.length);
   const correct = emojiLetterMap[idx];
-  // Pick 2 random incorrect letters
+  // Pick 2 random incorrect letters, always different
   let letters = emojiLetterMap.map(e => e.letter).filter(l => l !== correct.letter);
-  letters = shuffle(letters).slice(0, 2);
-  const options = shuffle([correct.letter, ...letters]);
+  letters = Array.from(new Set(letters)); // ensure uniqueness
+  const incorrect = shuffle(letters).slice(0, 2);
+  const options = shuffle([correct.letter, ...incorrect]);
   return { emoji: correct.emoji, letter: correct.letter, name: correct.name, options };
 }
 
@@ -40,10 +31,10 @@ function shuffle(arr) {
     .map(({ value }) => value);
 }
 
-const NUM_PLAYS = 10; // Change to desired number for debugging or gameplay
+const NUM_PLAYS = 1; // Change to desired number for debugging or gameplay
 
-const LettersGame = ({ strings, onBack}) => {
-  const locale = getLocale();
+const LettersGame = ({ strings, onBack, lang }) => {
+  const locale = lang || 'en';
   const emojiLetterMap = getEmojiLetterMap(locale);
   const [challenge, setChallenge] = useState(getRandomChallenge(emojiLetterMap));
   const [selected, setSelected] = useState({});
@@ -61,7 +52,7 @@ const LettersGame = ({ strings, onBack}) => {
         audio.play();
         setTimeout(() => {
           if (onBack) onBack();
-        }, 1000);
+        }, 2500);
       }, 2000); // 2 seconds to see last word
     }
   }, [winCount]);

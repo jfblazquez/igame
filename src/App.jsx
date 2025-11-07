@@ -17,8 +17,16 @@ const MINIGAMES = [
 function App() {
   const [screen, setScreen] = useState('menu');
   const [selectedMinigame, setSelectedMinigame] = useState(null);
-  const [lang, setLang] = useState('en');
+  const [lang, setLang] = useState(getLocale());
   const [strings, setStrings] = useState(locales[lang]);
+
+  function getLocale() {
+    if (typeof window !== 'undefined' && window.navigator) {
+      const lang = window.navigator.language || 'en';
+      if (lang.startsWith('es')) return 'es';
+    }
+    return 'en';
+  }
 
   useEffect(() => {
     setStrings(locales[lang]);
@@ -56,16 +64,16 @@ function App() {
         </select>
       </div>
       {screen === 'menu' && (
-        <MenuScreen MINIGAMES={MINIGAMES} strings={strings} onSelectMinigame={handleSelectMinigame} />
+        <MenuScreen MINIGAMES={MINIGAMES} strings={strings} onSelectMinigame={handleSelectMinigame} lang={lang} />
       )}
       {screen === 'letters' && (
-        <LettersGame strings={strings} onBack={handleBackToMenu} />
+        <LettersGame strings={strings} onBack={handleBackToMenu} lang={lang} />
       )}
       {screen === 'numbers' && (
-        <NumbersGame strings={strings} onBack={handleBackToMenu} />
+        <NumbersGame strings={strings} onBack={handleBackToMenu} lang={lang} />
       )}
       {screen === 'memory' && (
-        <MemoryGame strings={strings} onBack={handleBackToMenu} />
+        <MemoryGame strings={strings} onBack={handleBackToMenu} lang={lang} />
       )}
     </div>
   );
