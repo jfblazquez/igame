@@ -1,16 +1,39 @@
-# React + Vite
+## iGame
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> **A vibe coding experiment for a person with 0 knowledge on JavaScript.**
 
-Currently, two official plugins are available:
+> **Model used: GPT-4.1**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project is a collaborative journey between a beginner and AI, exploring coding, creativity, and fun.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## What is iGame?
 
-## Expanding the ESLint configuration
+iGame is a playful web app built with React and Vite, featuring a collection of simple minigames:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Letters Game:** Match emojis to their starting letter.
+- **Numbers Game:** Practice basic number skills (coming soon).
+- **Memory Game:** Test your memory with emoji cards (coming soon).
+
+The app supports English and Spanish, and is designed to be visually engaging and beginner-friendly.
+
+## Project Purpose
+
+This is not a production app—it's a vibe coding experiment. The goal is to learn, have fun, and see what can be built with zero prior JavaScript experience, guided by GPT-4.1.
+
+## How was it built?
+
+- All code, structure, and logic were generated and iterated using GPT-4.1.
+- The human collaborator provided ideas, feedback, and tested the app.
+- No prior JavaScript or React knowledge was required.
+
+## Running the App
+
+1. Install dependencies: `npm install`
+2. Start the dev server: `npm run dev`
+3. Open your browser to the provided local address.
+
+---
+
+Enjoy the vibe, experiment, and learn!
