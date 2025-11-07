@@ -1,0 +1,39 @@
+# Node modules
+node_modules/
+
+# Build output
+/dist
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Misc
+*.log
+*.tmp
+
+# Optional: coverage
+coverage/
+
+# Optional: test output
+/jest-test-results.json
+
+# Optional: local dev
+*.local.js
+*.local.json
