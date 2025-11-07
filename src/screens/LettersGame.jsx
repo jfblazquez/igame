@@ -31,7 +31,7 @@ function shuffle(arr) {
     .map(({ value }) => value);
 }
 
-const NUM_PLAYS = 1; // Change to desired number for debugging or gameplay
+const NUM_PLAYS = 10; // Change to desired number for debugging or gameplay
 
 const LettersGame = ({ strings, onBack, lang }) => {
   const locale = lang || 'en';
