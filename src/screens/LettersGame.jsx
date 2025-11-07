@@ -144,6 +144,9 @@ const LettersGame = ({ strings, onBack, lang }) => {
           </div>
         </div>
       )}
+      <button className="back-btn" onClick={onBack} style={{ marginTop: 48 }}>
+        {strings.back}
+      </button>
     </div>
   );
 };
